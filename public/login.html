@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar sesion - PixelPeru admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .login-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 360px;
+      width: 100%;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.1);
+    }
+    .login-box h1 {
+      font-size: 20px;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .login-box p.sub {
+      text-align: center;
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+    .login-box form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .login-box label {
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .login-box input {
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+    }
+    .login-msg {
+      text-align: center;
+      font-size: 13px;
+      min-height: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h1>Pixel<span style="color:#2563eb">Peru</span></h1>
+    <p class="sub">Panel de administracion</p>
+    <form id="login-form">
+      <label>
+        Usuario
+        <input type="text" id="username" required autocomplete="username" />
+      </label>
+      <label>
+        Contraseña
+        <input type="password" id="password" required autocomplete="current-password" />
+      </label>
+      <button type="submit" class="btn-primary">Ingresar</button>
+      <p id="login-msg" class="login-msg"></p>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const msg = document.getElementById("login-msg");
+      msg.style.color = "#666";
+      msg.textContent = "Verificando...";
+
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        window.location.href = "/admin.html";
+      } else {
+        msg.style.color = "#dc2626";
+        msg.textContent = data.error || "No se pudo iniciar sesion";
+      }
+    });
+  </script>
+</body>
+</html>
